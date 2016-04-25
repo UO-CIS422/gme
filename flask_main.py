@@ -39,10 +39,6 @@ app.logger.setLevel(logging.DEBUG)
 def index():
   return flask.render_template('index.html')
 
-@app.route("/form")
-def form():
-    return flask.render_template('teammate-form.html')
-
 @app.route("/display")
 def display():
     flask.g.ratings = read_ratings(flask.session["member"], flask.session["timestamp"])

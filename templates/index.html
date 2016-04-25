@@ -1,26 +1,13 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 
-<!--
-  This is a minimal html template for an example web application.
-  It uses the 'bootstrap' javascript and css libraries to be
-  'responsive' (i.e., to automatically adjust to tablet and phone
-  form factors).  The basic concept of bootstrap is to make a
-  rows-and-columns arrangement that can dynamically adjust by breaking
-  up long rows.  See http://getbootstrap.com/getting-started/ for
-  documentation  (scroll down past the installation directions). 
-
-  I'm also loading the jquery library.  It is mostly useful for
-  doing 'ajax' interaction, which I am not (yet) demonstrating here. 
--->
-
 <!-- Bootstrap requires the following three meta tags to appear first -->
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-<title>Nanotweet</title>
+<title>CIS 422 Group Member Evaluation</title>
 
 <!-- Javascript and Cascading Style Sheets (css) libraries -->
 <!-- mostly from content delivery networks                 -->
@@ -54,40 +41,44 @@
 
   <div class="row">
     <div class="col-xs-6 text-center">
-      <h1>Hello there.</h1>
+      <h1>Group Member Evaluation: Teammates</h1>
     </div>
-  </div>
+    </div>
+<br />
 
+<form id="teammates" method="POST" action="_teammates">
 
-  <div class="row">
-  <div class="col-md-4">
-    <p>Here is an almost completely static page. 
-    </p>
+<div class="row">
+<div class="col-sm-6">
+    <label>Your name:</label>
+    <input type="text" name="yourself" size="50"
+       placeholder="Firstname Lastname" required>
+    </textarea>
   </div> <!-- column -->
-  </div> <!-- row -->
+</div> <!-- row -->
 
-  <div class="row">
-  <div class="col-md-4">
-    <p>There's more going on
-    at the <a href="{{ request.script_root }}/form"
-    >Entry Form</a> and the <a href="{{ request.script_root }}/display">display</a>.
-    
-    </p>
+{% for teammate in [ 1, 2, 3, 4 ] %}
+<div class="row">
+<div class="col-sm-6">
+    <label>Teammate name:</label>
+    <input type="text" name="teammate" size="50"
+       placeholder="Firstname Lastname">
+    </textarea>
   </div> <!-- column -->
-  </div> <!-- row -->
+</div> <!-- row -->
+{% endfor %}
 
+<div class="row">  &nbsp; </div>
 
-  {% if session.rant is defined %}
-  <div class="row">
-  <div class="col-md-8">
-  <p>Haha, not really static, but I can't save your rant 
-    permanently because I haven't integrated a database yet.
-    You said: 
-    {{ session.rant }}.
-  </p>   
+<div class="row">
+  <div class="col-xs-2">
+    <input type="submit" value="Next&gt;" />
   </div> <!-- column -->
-  </div> <!-- row -->
-  {% endif %}
+</div> <!-- row -->
+
+</form>
+
+
 
  </div> <!-- container -->
 </body> </html>
