@@ -7,35 +7,23 @@ M Young, April 2016 for CIS 422
 """
 
 DBFILE = "sqlite.db"
+CSVFILE = "db.csv"
 from schema import DBSCHEMA_SQL
 from schema import DBSCHEMA
 
+import csv    # Write Excel-compatible file
 import arrow  # Date-Time module, better than the built-in datetime
 import sqlite3
 
-def write_headers(schema):
-    """Write the headers as first row of CSV"""
-    for field in schema:
-        print('"{}",'.format(field), end="")
-    print()
-
-def escapify(field):
-    """Protect newlines and quotes"""
-    field = field.replace('"', r'\"')
-    field = field.replace("'", r"\'")
-    field = field.replace("\r", " ")
-    field = field.replace("\n", r"\n")
-    return field
-
+csvfile = open(CSVFILE, 'w', newline='')
+writer = csv.writer(csvfile,dialect='excel')
 
 def write_row(row):
     """Write database row as CSV"""
-    for field in row:
-        print('"{}",'.format(escapify(field)), end="")
-    print()
-
-
-
+    # for field in row:
+    #     print('"{}",'.format(escapify(field)), end="")
+    # print()
+    writer.writerow(row)
 
 conn = sqlite3.connect(DBFILE)
 c = conn.cursor()
@@ -52,7 +40,7 @@ c = conn.cursor()
 c.execute("SELECT * FROM evals")
 results = c.fetchall()
 
-write_headers(DBSCHEMA)
+write_row(DBSCHEMA)
 for row in results:
     write_row(row)
 
