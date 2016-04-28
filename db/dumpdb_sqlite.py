@@ -19,10 +19,19 @@ def write_headers(schema):
         print('"{}",'.format(field), end="")
     print()
 
+def escapify(field):
+    """Protect newlines and quotes"""
+    field = field.replace('"', r'\"')
+    field = field.replace("'", r"\'")
+    field = field.replace("\r", " ")
+    field = field.replace("\n", r"\n")
+    return field
+
+
 def write_row(row):
     """Write database row as CSV"""
     for field in row:
-        print('"{}",'.format(field), end="")
+        print('"{}",'.format(escapify(field)), end="")
     print()
 
 
@@ -41,7 +50,7 @@ c = conn.cursor()
 
 
 c.execute("SELECT * FROM evals")
-results = c.fetchmany()
+results = c.fetchall()
 
 write_headers(DBSCHEMA)
 for row in results:
