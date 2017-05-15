@@ -28,3 +28,14 @@ clean_names.py:
        mapping the name to itself.   The user can then alter
        that entry and run again.
 
+group_ratings.py:
+	After clean_names has been iterated to get unique names,
+	use group_ratings to produce a CSV file that cross-tabulates
+	team member ratings of each other, with comments.
+
+	Bugs:  Comments go into a single column (no way to span
+	in CSV format), and if you manually merge and wrap cells,
+	Excel auto-height will fail to adjust row height.  It appears
+	to be necessary to manually merge, wrap, AND adjust row
+	height.  It is not clear how to avoid this.
+
