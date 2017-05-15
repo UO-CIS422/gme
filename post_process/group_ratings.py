@@ -27,6 +27,8 @@ def get_args():
     parser = argparse.ArgumentParser(description="Combine groups in GME file")
     parser.add_argument('gme', type=str,
                         help="GME file in csv format")
+    parser.add_argument('summary', type=str,
+                        help="Output summary file in CSV format")
     args = parser.parse_args()
     return args
 
@@ -103,18 +105,26 @@ def rating_of(member, teammate, attribute, group):
             return gme[attribute]
     return "-"
 
+#
+# Summary as another CSV file ...
+#
+def summarize(summary_file_path, groups):
+    with open(summary_file_path, 'w') as csvfile:
+        writer = csv.writer(csvfile) 
+        
+        for group in groups:
+            summarize_group(group, writer)
+            writer.writerow([])
+            comments_group(group, writer)
+            writer.writerow([])
 
-def summarize_group(group):
+def summarize_group(group, writer):
     """Print a matrix summary of group"""
     members = group[0]
-    # Header row
-    print(" ,", end="")  # Start in second column
-    for member in members:
-        print(member, end=",")
-    print()
+    writer.writerow( [ "" ] + members )
     # One row per member
     for member in members:
-        print(member, end=",")
+        row = [ member ]
         for mate in members:
             collected = ""
             sep=""
@@ -122,34 +132,32 @@ def summarize_group(group):
                 collected = (collected + sep +
                    rating_of(mate,member,attribute,group))
                 sep = "/"
-            print(collected, end=",")
-        print()
+            row.append(collected)
+        writer.writerow(row)
 
-def comments_group(group):
+def comments_group(group, writer):
     """Print comments about each member"""
     members = group[0]
     for member in members:
-        print(member)
+        header = [ member ]
         for attribute in attributes:
-            print(", {}".format(attribute))
+            attr_header = "  --" + attribute
             comments_label = attribute + "_comments"
             for mate in members:
                 comments = rating_of(mate, member, comments_label, group)
                 if len(comments) > 2:
-                    print(", {}, {}".format(mate, comments))
-    
-        
+                    if header:
+                        writer.writerow(header)
+                        header = None
+                    writer.writerow( [attr_header , mate, comments ] )
+                    attr_header = ""
     
 def main():
     args = get_args()
     groups = group_ratings(args.gme)
     # list_groups(groups)
 
-    for group in groups:
-        summarize_group(group)
-        print()  # Separate
-        comments_group(group)
-        print("\n")
+    summarize(args.summary, groups)
 
 if __name__ == "__main__":
     main()
