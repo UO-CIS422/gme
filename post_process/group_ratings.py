@@ -103,6 +103,7 @@ def rating_of(member, teammate, attribute, group):
             return gme[attribute]
     return "-"
 
+
 def summarize_group(group):
     """Print a matrix summary of group"""
     members = group[0]
@@ -123,6 +124,19 @@ def summarize_group(group):
                 sep = "/"
             print(collected, end=",")
         print()
+
+def comments_group(group):
+    """Print comments about each member"""
+    members = group[0]
+    for member in members:
+        print(member)
+        for attribute in attributes:
+            print(", {}".format(attribute))
+            comments_label = attribute + "_comments"
+            for mate in members:
+                comments = rating_of(mate, member, comments_label, group)
+                if len(comments) > 2:
+                    print(", {}, {}".format(mate, comments))
     
         
     
@@ -134,6 +148,8 @@ def main():
     for group in groups:
         summarize_group(group)
         print()  # Separate
+        comments_group(group)
+        print("\n")
 
 if __name__ == "__main__":
     main()
