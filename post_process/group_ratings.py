@@ -34,12 +34,22 @@ def get_args():
 # Structure of GME file -- relevant columns are the first two
 #
 #
-rater_name_col = 1
-rated_name_col = 2
+# rater_name_col = 1
+# rated_name_col = 2
 
+rater_label = "member"
+rated_label = "teammate"
+# Numbered attributes in spreadsheet
+attributes = [ "dependable", "constructive", "engaged",
+                   "productive", "asset" ]
+# Each comment entry is one of those attributes + _comments
 #
 # Structure of a group record is
 # [ names, rating, rating, rating, ... ]
+#
+# Note now we are using a DictReader, so each rating
+# is an ordered dict.  This makes it easier to access
+# rating[name, attribute].
 #
 
 def group_ratings(gme_file_path):
@@ -50,13 +60,10 @@ def group_ratings(gme_file_path):
     groups = [ ] 
     person_group = { }
     with open(gme_file_path, newline="") as csvfile:
-        reader = csv.reader(csvfile) 
+        reader = csv.DictReader(csvfile) 
         for row in reader:
-            if row[0] == "date":
-                # Header row, skip
-                continue
-            rater = row[rater_name_col]
-            rated = row[rated_name_col]
+            rater = row[rater_label]
+            rated = row[rated_label]
             # print("Processing {}->{}".format(rater,rated))
             if rater in person_group:
                 group = person_group[rater]
@@ -83,10 +90,50 @@ def list_groups(groups):
         #for row in group:            
     return
 
+def rating_of(member, teammate, attribute, group):
+    """
+    The group record is [[members], rating, rating, ... ]
+    where each rating is a dict in which 'member' is the 
+    rater and 'teammate' is the rated person.  Some members 
+    may not have submitted ratings, so for those we return 
+    '-'
+    """
+    for gme in group[1:]:
+        if gme["member"] == member and gme["teammate"] == teammate:
+            return gme[attribute]
+    return "-"
+
+def summarize_group(group):
+    """Print a matrix summary of group"""
+    members = group[0]
+    # Header row
+    print(" ,", end="")  # Start in second column
+    for member in members:
+        print(member, end=",")
+    print()
+    # One row per member
+    for member in members:
+        print(member, end=",")
+        for mate in members:
+            collected = ""
+            sep=""
+            for attribute in attributes:
+                collected = (collected + sep +
+                   rating_of(mate,member,attribute,group))
+                sep = "/"
+            print(collected, end=",")
+        print()
+    
+        
+    
 def main():
     args = get_args()
     groups = group_ratings(args.gme)
-    list_groups(groups)
+    # list_groups(groups)
+
+    for group in groups:
+        summarize_group(group)
+        print()  # Separate
 
 if __name__ == "__main__":
     main()
