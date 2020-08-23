@@ -11,7 +11,7 @@
 # You may need to configure these variables:
 ###
 PY = python3      # You might need a specific version like python3.4
-PYVENV = pyvenv   # You might need a specific version like pyvenv-3.4
+PYVENV = python3 -m venv  # You might need a specific version like pyvenv-3.4
 PORT = 5656       # Choose a port number that doesn't conflict, or specify as arg to make
 
 install:	CONFIG.py
@@ -22,6 +22,11 @@ install:	CONFIG.py
 test:	env CONFIG.py
 	(. env/bin/activate; $(PY) flask_main.py)
 
+# FIXME: This 'run' command does http on an available port. To run https
+# under nginx, we should bind to a 127.0.0.1 on another port.  Then in nginx
+# configuration, we listen to the https port and tunnel it to the local port.
+# See notes.txt.
+#
 run:	env CONFIG.py
 	(. env/bin/activate; gunicorn -b 0.0.0.0:$(PORT) flask_main:app) &
 

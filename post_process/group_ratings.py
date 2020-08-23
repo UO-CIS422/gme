@@ -3,6 +3,7 @@ group_ratings:  Gather mutual ratings of students by group.
 
 Usage: 
    python3 group_ratings.py gme.csv 
+      Amendment: gme.
 
    We assume names have already been normalized by clean_names.py
    (possibly in multiple rounds)
@@ -118,6 +119,46 @@ def summarize(summary_file_path, groups):
             comments_group(group, writer)
             writer.writerow([])
 
+#
+# Summary as html
+#
+def html_summarize(summary_file_path, groups):
+    with open(summary_file_path, 'w') as report:
+        print("<html><body>", file=report)
+        
+        for group in groups:
+            print("<hr />", file=report)
+            html_summarize_group(group, report)
+            html_comments_group(group, report)
+
+        print("</body></html>", file=report)
+
+
+def html_summarize_group(group, report):
+    """Print a matrix summary of group"""
+    members = group[0]
+
+    print("<table>", file=report)
+    print("<tr>", file=report)
+    print("<td>&nbsp;</td>", file=report)
+    for member in members:
+        print("<td>{}</td> ".format(member), file=report, end="")
+    print("</tr>", file=report)
+
+    # One row per member
+    for member in members:
+        print("<tr><td>{}</td>".format(member), file=report,end="")
+        for mate in members:
+            collected = ""
+            sep=""
+            for attribute in attributes:
+                collected = (collected + sep +
+                   rating_of(mate,member,attribute,group))
+                sep = " "  # Could be / or | or " "
+            print("<td>{}</td>".format(collected), file=report, end="")
+    print("</table>", file=report)
+
+
 def summarize_group(group, writer):
     """Print a matrix summary of group"""
     members = group[0]
@@ -134,6 +175,25 @@ def summarize_group(group, writer):
                 sep = "/"
             row.append(collected)
         writer.writerow(row)
+
+def html_comments_group(group, report):
+    """Print comments about each member"""
+    members = group[0]
+    for member in members:
+        header = member
+        for attribute in attributes:
+            attr_header = "<strong>{}</strong>".format(attribute.capitalize())
+            comments_label = attribute + "_comments"
+            for mate in members:
+                comments = rating_of(mate, member, comments_label, group)
+                if len(comments) > 2:
+                    if header:
+                        print("<p><strong>{}</strong></p>".format(header),
+                                  file=report)
+                        header = None
+                    print("<p>{} per {}: {}</p>".format(
+                        attr_header, mate, comments), file=report)
+                    attr_header = ""
 
 def comments_group(group, writer):
     """Print comments about each member"""
@@ -157,7 +217,8 @@ def main():
     groups = group_ratings(args.gme)
     # list_groups(groups)
 
-    summarize(args.summary, groups)
+    # summarize(args.summary, groups)
+    html_summarize(args.summary, groups)
 
 if __name__ == "__main__":
     main()
