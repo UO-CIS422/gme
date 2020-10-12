@@ -11,7 +11,7 @@ M Young, April 2016 for CIS 422
 """
 
 DBFILE = "db/sqlite.db"
-from db.schema import DBSCHEMA_SQL
+from schema import DBSCHEMA_SQL
 
 import arrow  # Date-Time module, better than the built-in datetime
 
