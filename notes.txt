@@ -1,0 +1,57 @@
+Notes on configuration and installation
+May 2017
+
+https access:
+    We want to access the site through https.
+
+    On ix or another machine we do not administer:  Likely impossible unless we
+    have privileged access to the web server configuration.  We will not get that on
+    ix for class and other experimental work.  Essentially, the SSL certificates for
+    ix are taken as evidence that the user is seeing "official" departmentally supported
+    resources, and anything that is not administered by the department support
+    staff does not get this impramatur.
+
+    On a machine we administer, such as a Raspberry Pi, we can tunnel https
+    to an application server.
+
+    Pre-requisite:  Get an SSL certificate.  letsencrypt is a good free source. You'll
+    need to have a stable name (e.g., roethke.d.cs.uoregon.edu) although as far
+    as I know it is not necessary to have a stable IP address (e.g., the *.d.cs.uoregon.edu
+    addresses are dynamically assigned).    Not further documented here, but
+    contact michal@cs.uoregon.edu if you want more help with this step.
+
+    Next step assumes the nginx web server.  Apache should be conceptually similar
+    but with a different configuration file language.
+
+    In the configuration file (/etc/nginx/site-enabled/default on roethke), we
+    listen on port 443 and forward to another port, like this:
+
+  server {
+   root /var/www/html;
+   
+   listen 443 ssl;
+   ssl_certificate 
+       /etc/letsencrypt/live/roethke.d.cs.uoregon.edu/fullchain.pem;
+   ssl_certificate_key
+       /etc/letsencrypt/live/roethke.d.cs.uoregon.edu/privkey.pem;
+   ssl_trusted_certificate
+      /etc/letsencrypt/live/roethke.d.cs.uoregon.edu/chain.pem;
+
+   location / {
+	proxy_pass http://localhost:7000;
+   }
+}
+
+I am not sure the 'root' line is necessary.  The rest does the following:
+  * Tells nginx where our SSL certificate is, so that it can go through the authentication
+     handshake to prove that it is the roethke.d.cs.uoregon.edu that earlier obtained
+     that certificate.  This is part of establishing an encrypted and authenticated
+     connection with a browser.
+  * Listens on port 443, which is the default port for https
+  * Forwards ("proxies") all traffic from port 443 to local port 7000, so a
+     server bound to 127.0.0.1:7000 can receive it as http traffic.  nginx will take
+     care of the encryption and decryption.  Because the local server is listening to
+     127.0.0.1 (which is the "localhost" address)  and not 0.0.0.0, it is reachable
+     only from clients on the same machine.  This prevents anyone who is not
+     running on the same machine from reaching the application server on port 7000.
+
