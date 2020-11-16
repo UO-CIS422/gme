@@ -3,6 +3,18 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# IDE cruft
+.idea
+
+# MacOS Cruft
+.DS_Store
+
+# Per-deployment data
+post_process/*
+CONFIG.py
+db/*.db
+db/*.csv
+
 # C extensions
 *.so
 

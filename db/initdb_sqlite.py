@@ -27,14 +27,15 @@ c = conn.cursor()
 #           + ")")
 c.execute("CREATE TABLE evals (" + DBSCHEMA_SQL + ")")
 nowstring = arrow.now().isoformat()
-argtuple = (nowstring, "sample-rater", "sample-teammate", 
+argtuple = (nowstring, "http://fake.fake",
+            "sample-rater", "sample-teammate",
             0, "not dependable",
             1, "slightly constructive",
             2, "kinda engaged",
             3, "pretty productive",
             4, "quite an asset")
             
-c.execute("INSERT INTO evals VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )", argtuple)
+c.execute("INSERT INTO evals VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )", argtuple)
 conn.commit()
 
 c.execute("SELECT * FROM evals")

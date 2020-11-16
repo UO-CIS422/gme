@@ -59,8 +59,9 @@ def set_teammates():
     flask.request.form.getlist('teammate')))
   teammates=flask.request.form.getlist('teammate')
   yourself = flask.request.form.get('yourself')
+  repo = flask.request.form.get('repo')
   team =  [ "{} (yourself)".format(yourself)] + list(teammates)
-  return flask.render_template("eval-form.html", team=team)
+  return flask.render_template("eval-form.html", team=team, repo=repo)
 
 # Step 2: Evaluations per teammate (including self)
 #
@@ -69,6 +70,7 @@ def evals():
   app.logger.debug("Evaluations: |{}|".format(flask.request.form))
   member = flask.request.form.get("teammate") # Should get first one
   member = member.replace(" (yourself)", "")  # Undo edit in set_teammates
+  repo = flask.request.form.get("repo")
   per_member_fields = [ "teammate",
                         "dependable", "comments-dependable",
                         "constructive", "comments-constructive",
@@ -91,7 +93,7 @@ def evals():
     for field in per_member_fields:
       app.logger.debug("Probing instance {} of field {} in {}".format(i,field,fields))
       ratings[field] = fields[field][i]
-    write_ratings(timestamp, ratings)
+    write_ratings(timestamp, repo, ratings)
     
   flask.session["member"] = member
   flask.session["timestamp"] = timestamp

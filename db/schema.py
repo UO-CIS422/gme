@@ -2,7 +2,7 @@
 Scheme of database, for sharing between applicaton, forms, and
 templates
 """
-DBSCHEMA = ["date", "member", "teammate",
+DBSCHEMA = ["date", "repo", "member", "teammate",
             "dependable", "dependable_comments",
             "constructive", "constructive_comments",
             "engaged", "engaged_comments",

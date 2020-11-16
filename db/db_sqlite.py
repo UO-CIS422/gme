@@ -18,7 +18,7 @@ DBFILE = "db/sqlite.db"  # Relative to main program, not to this module
 
 sqlite3.enable_callback_tracebacks(True)
 
-def write_ratings(timestamp, ratings):
+def write_ratings(timestamp, repo, ratings):
     """
     Insert a rant to the database, tagging it with an ISO-formatted
     timestamp.
@@ -26,14 +26,14 @@ def write_ratings(timestamp, ratings):
     conn = sqlite3.connect(DBFILE)
     c = conn.cursor()
     #FIXME:  We should produce this tuple from the DBSCHEMA constant
-    argtuple = (timestamp, ratings["member"], ratings["teammate"], 
+    argtuple = (timestamp, repo, ratings["member"], ratings["teammate"],
                 ratings["dependable"], ratings["comments-dependable"],
                 ratings["constructive"], ratings["comments-constructive"],
                 ratings["engaged"], ratings["comments-engaged"],
                 ratings["productive"], ratings["comments-productive"],
                 ratings["asset"], ratings["comments-asset"])
             
-    c.execute("INSERT INTO evals VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )", argtuple)
+    c.execute("INSERT INTO evals VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )", argtuple)
     conn.commit()
     conn.close()
 
@@ -97,6 +97,6 @@ def dump_db():
 # This is something that might change when we have multiple
 # possible database implementations (e.g., Redis and MongoDB
 # in addition to SQLite).  I haven't thought through how
-# to gracefully accomodate different approaches to threading.
+# to gracefully accommodate different approaches to threading.
 #
 

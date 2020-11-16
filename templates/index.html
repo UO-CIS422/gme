@@ -39,6 +39,7 @@
 <body>
 <div class="container">
 
+
   <div class="row">
     <div class="col-xs-6 text-center">
       <h1>Group Member Evaluation: Teammates</h1>
@@ -48,12 +49,15 @@
 
 <form id="teammates" method="POST" action="_teammates">
 
+
 <div class="row">
   <div class="col-md-10">
     <p>This two-page form is for evaluating each member of your team,
   including yourself, on contributions to the project so far.  You
   will be asked to evaluate each member on the following attributes:
     </p>
+
+
     <dl>
       <p><strong>Dependable:</strong>
           A <em>dependable</em> team member makes commitments to perform
@@ -94,12 +98,22 @@
 
   <div class="row">
     <div class="col-md-10">
-      <p>On this page, please enter the name of each team member.
+      <p>On this page, please enter
+          the URL of your public repository and
+          the name of each team member.
     Then you will be taken to a page for entering evaluation for each
     member.</p>
     </div> <!-- column -->
   </div> <!-- row -->
       
+ <div class="row">
+<div class="col-sm-6">
+    <label>Github URL:</label>
+    <input type="url" name="repo" size="50"
+       placeholder="https://github.com/your_project" required>
+    </input>
+  </div> <!-- column -->
+  </div>
 
 <div class="row">
 <div class="col-sm-6">
@@ -109,6 +123,8 @@
     </textarea>
   </div> <!-- column -->
 </div> <!-- row -->
+
+
 
 {% for teammate in [ 1, 2, 3, 4 ] %}
 <div class="row">

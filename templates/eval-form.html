@@ -33,15 +33,27 @@
 <br /><hr />
   
 <form id="gme" method="POST" action="_gme_form">
+
+<div class="row">
+<div class="col-sm-10">
+    <label>Project Github URL</label>
+    <input type="url" name="repo" size="50"
+       value="{{ repo }}"
+        readonly="readonly">
+    </input>
+  </div> <!-- column -->
+  </div>
+
 {% for member in team if not member is equalto ""%}
 
 <div style="background-color: rgb(240,240,240);">
+
 <div class="row">
-<div class="col-sm-6">
-    <label>Member name:</label>
+<div class="col-sm-10">
+    <label>Member</label>
     <input type="text" name="teammate" size="50"
        value="{{ member }}" readonly="readonly">
-    </textarea>
+    </input>
   </div> <!-- column -->
 </div> <!-- row -->
 

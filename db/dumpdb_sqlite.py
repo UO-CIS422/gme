@@ -2,7 +2,7 @@
 Dump the database of evaluations into CSV
 File name is "sqlite.db".
 
-Run as "python3 dumbdb_sqlite.py >dump.csv"
+Run as "python3 dumpdb_sqlite.py >dump.csv"
 M Young, April 2016 for CIS 422
 """
 
